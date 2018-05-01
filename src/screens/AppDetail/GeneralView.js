@@ -54,7 +54,10 @@ class GeneralView extends Component {
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 16}}>
 					<View>
 						<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}} >
-							<Text style={{color: 'grey', fontSize: 17}} >{Number(averageUserRating).toFixed(1)} </Text>
+							{
+								isNaN(averageUserRating)? null :
+								<Text style={{color: 'grey', fontSize: 17}} >{Number(averageUserRating).toFixed(1)} </Text>
+							}
 							<StarRating 
 								starSize={17}
 								disabled={true}
@@ -62,7 +65,7 @@ class GeneralView extends Component {
 								rating={isNaN(averageUserRating)? 0 : averageUserRating} 
 								fullStarColor={'grey'}/>
 						</View>
-						<Text style={{color: '#bbb', fontSize: 12}} >{isNaN(averageUserRating)? 'Not enough rating' : `${userRatingCount} Ratings`}</Text>
+						<Text style={{color: '#bbb', fontSize: 12}} >{isNaN(averageUserRating)? 'Not Enough Ratings' : `${userRatingCount} Ratings`}</Text>
 					</View>
 					<View >
 						<Text style={{color: 'grey', fontSize: 17}} >{version} </Text>
