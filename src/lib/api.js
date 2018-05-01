@@ -16,3 +16,8 @@ export const getAppDetailById = (id) => {
 	return fetch('https://itunes.apple.com/hk/lookup?id=' + id)
 		.then(res => res.json())
 }
+
+export const searchApp = (term) => {
+	return fetch('https://itunes.apple.com/search?term=' + term + '&entity=software')
+	.then(res => res.json())
+}

@@ -71,16 +71,12 @@ export class SingleListItemView extends Component {
 					<Text numberOfLines={2} style={{fontSize: 11}} >{appTitle}</Text>
 					<Text style={{fontSize: 11, marginTop: 4, color: '#777'}} >{appCategory}</Text>
 					<View style={{width: 50}} >
-						{
-							averageUserRating?
-								<StarRating 
-									starSize={12}
-									disabled={true}
-									maxStars={5}
-									rating={averageUserRating} 
-									fullStarColor={'yellow'}/> :
-								null
-						}
+						<StarRating 
+							starSize={12}
+							disabled={true}
+							maxStars={5}
+							rating={isNaN(averageUserRating)? 0 : averageUserRating} 
+							fullStarColor={'yellow'}/>
 					</View>
 				</View>
 			</TouchableOpacity>

@@ -11,4 +11,5 @@ export default (store, Provider) =>  {
 	Navigation.registerComponent('AppList', () => AppList, store, Provider);
 	Navigation.registerComponent('AppList.SearchBar', () => SearchBar, store, Provider);
 	
+	
 }

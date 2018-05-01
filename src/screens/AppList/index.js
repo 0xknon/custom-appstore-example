@@ -20,12 +20,16 @@ import {
 		LazyloadView,
 		LazyloadListView
 } from 'react-native-lazyload';
-import * as  appActions from '../../redux/actions';
 
 import SingleRecommendedView from './SingleRecommendedView'
 import SingleListItemView from './SingleListItemView'
+import SearchedListView from './SearchedListView'
+import Loading from "../../components/Loading";
 
 import { getRecommendationList, getNormalList } from '../../lib/api'
+import appListActions from '../../redux/appList/actions';
+const { updateNormalList, updateRecommendationList } = appListActions;
+
 const { width, height } = Dimensions.get('window')
 
 export class AppList extends Component {
@@ -34,10 +38,10 @@ export class AppList extends Component {
 	};
 
 	state = {
-		recommendedList: [],
-		normalList: [],
-		normalListLength: 0,
-		debounced: ''
+		normalListLength: 10,
+		debounced: '',
+		normalListLoading: true,
+		recommendationListLoading: true,
 	}
 
 	constructor(props) {
@@ -50,21 +54,19 @@ export class AppList extends Component {
 		//Recommended List fetch
 		getRecommendationList()
 			.then(recommendedApp => {
-				this.setState({
-					recommendedList: recommendedApp.feed.entry
-				})
+				this.props.updateRecommendationList(recommendedApp.feed.entry);
+				this.setState({recommendationListLoading: false});
 			})
 
 		//Normal List fetch
 		getNormalList()
 			.then(normalListApp => {
-				this.setState({
-					normalList: normalListApp.feed.entry
-				})
+				this.props.updateNormalList(normalListApp.feed.entry);
+				this.setState({normalListLoading: false});
 			})
 
 		this.subscription = this.onEndReached$
-			.debounceTime(1100)
+			.debounceTime(900)
 			.subscribe(distanceFromEnd => {
 				let { normalListLength } = this.state;
 				this.setState({normalListLength: normalListLength + 10})
@@ -78,14 +80,11 @@ export class AppList extends Component {
 	}
 	
 	onEndReached(distanceFromEnd) {
-		//console.log(distanceFromEnd); 
-		// let { normalListLength } = this.state;
-		// //this.setState({normalListLength: normalListLength + 10})
-		// console.log(this.state.normalList); 
     this.onEndReached$.next(distanceFromEnd);
 	}
 
 	renderHeader() {
+		let { recommendationList } = this.props;
 		return (
 			<View style={{padding: 16, borderBottomWidth: 1, borderColor: '#ddd'}}>
 				<Text style={{paddingBottom: 8, fontSize: 20, fontWeight: 'bold'}}>推介</Text>
@@ -94,7 +93,7 @@ export class AppList extends Component {
 					showsHorizontalScrollIndicator={false}
 					name="lazyload-list" >
 					{
-						this.state.recommendedList.map((info, index) => (
+						recommendationList.map((info, index) => (
 							<SingleRecommendedView 
 								navigator={this.props.navigator}
 								key={index} info={info}/>
@@ -113,11 +112,23 @@ export class AppList extends Component {
 	}
 
   render() {
-		let { normalList, recommendedList, normalListLength } = this.state;
+		let { normalListLength, recommendationListLoading, normalListLoading } = this.state;
+		let { normalList, searchedList } = this.props;
 		const paginatedList = normalList.slice(0, normalListLength);
 		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		//let dataSource = ds.cloneWithRows(paginatedList)
-		let dataSource = ds.cloneWithRows(normalList)
+		let dataSource = ds.cloneWithRows(paginatedList)
+		
+		if (recommendationListLoading || normalListLoading) {
+			return (
+				<Loading />
+			)
+		}
+
+		if (searchedList.length != 0) {
+			return (
+				<SearchedListView />
+			)
+		}
     return (
 			<LazyloadListView
 				name="lazyload-listview"
@@ -131,7 +142,7 @@ export class AppList extends Component {
 				renderHeader={() => this.renderHeader()}
 				renderRow={(item, sectionID, rowID, highlightRow) => this.renderItem(item, sectionID, rowID, highlightRow)}
 				onEndReachedThreshold={0}
-				// onEndReached={this.onEndReached}
+				onEndReached={this.onEndReached}
 			/>
     );
   }
@@ -139,4 +150,15 @@ export class AppList extends Component {
 }
 
 
-export default connect()(AppList);
+const mapStateToProps = (state) => {
+	const { normalList, recommendationList, searchedList} = state.appList.toJS();
+	return {
+		normalList,
+		recommendationList,
+		searchedList
+	}
+} 
+
+export default connect(mapStateToProps, {
+	updateNormalList, updateRecommendationList
+})(AppList);

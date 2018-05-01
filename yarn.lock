@@ -1659,7 +1659,7 @@ fbjs@0.8.12:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.9"
 
-fbjs@^0.8.16, fbjs@^0.8.9:
+fbjs@^0.8.16, fbjs@^0.8.4, fbjs@^0.8.9:
   version "0.8.16"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.16.tgz#5e67432f550dc41b572bf55847b8aca64e5337db"
   dependencies:
@@ -3458,6 +3458,14 @@ prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.8:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
+prop-types@^15.6.1:
+  version "15.6.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.1.tgz#36644453564255ddda391191fb3a125cbdf654ca"
+  dependencies:
+    fbjs "^0.8.16"
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
+
 prr@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/prr/-/prr-0.0.0.tgz#1a84b85908325501411853d0081ee3fa86e2926a"
@@ -3514,6 +3522,13 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-addons-shallow-compare@15.6.2:
+  version "15.6.2"
+  resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.6.2.tgz#198a00b91fc37623db64a28fd17b596ba362702f"
+  dependencies:
+    fbjs "^0.8.4"
+    object-assign "^4.1.0"
+
 react-clone-referenced-element@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-clone-referenced-element/-/react-clone-referenced-element-1.0.1.tgz#2bba8c69404c5e4a944398600bcc4c941f860682"
@@ -3528,6 +3543,12 @@ react-devtools-core@2.3.1:
   dependencies:
     shell-quote "^1.6.1"
     ws "^2.0.3"
+
+react-native-autocomplete-input@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-autocomplete-input/-/react-native-autocomplete-input-3.5.0.tgz#2e52e3865abf1ad3e8d04f7e39f5314c03a89e4d"
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-button@^2.3.0:
   version "2.3.0"
@@ -3559,6 +3580,19 @@ react-native-navigation@^1.1.235:
 react-native-scrollable-mixin@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-scrollable-mixin/-/react-native-scrollable-mixin-1.0.1.tgz#34a32167b64248594154fd0d6a8b03f22740548e"
+
+react-native-search-bar@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-search-bar/-/react-native-search-bar-3.4.1.tgz#01f38a0df81c25e60404721c488492eab6266f82"
+  dependencies:
+    prop-types "^15.5.10"
+
+react-native-snap-carousel@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/react-native-snap-carousel/-/react-native-snap-carousel-3.7.0.tgz#7d2794339c661d3e1f8ec4786b6335ae7cb23262"
+  dependencies:
+    prop-types "^15.6.1"
+    react-addons-shallow-compare "15.6.2"
 
 react-native-star-rating@^1.0.9:
   version "1.0.9"

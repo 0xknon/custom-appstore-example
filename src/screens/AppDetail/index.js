@@ -1,25 +1,32 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   TouchableOpacity,
   Text,
   Image,
   View,
-  ActivityIndicator,
-  ScrollView,
+  Dimensions,
+  ScrollView
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
-import * as  appActions from '../../redux/actions';
 
+import GeneralView from "./GeneralView";
+import Preview from "./Preview";
+import Loading from "../../components/Loading";
+
+import * as  appActions from '../../redux/actions';
 import { getAppDetailById } from '../../lib/api'
+
+const { width, height } = Dimensions.get('window');
+import styles from './styles'
 
 export class Login extends Component {
 
 
   state = {
     isLoading: true,
-    appDetail: {}
+    appDetail: {},
+    readMore: false
   }
 
   constructor(props) {
@@ -33,41 +40,29 @@ export class Login extends Component {
 			})
   }
 
-  onGet() {
-
-  }
-
   render() {
-    let { isLoading, appDetail } = this.state;
+    let { isLoading, appDetail, readMore } = this.state;
+    const { 
+      description
+    } = appDetail;
     if (isLoading) {
       return (
-        <ActivityIndicator />
+        <Loading />
       )
     }
     return (
-      <ScrollView>
-        <View style={{flexDirection: 'row'}}>
-          <Image 
-            style={{width: 100, height: 100}} 
-            source={{uri: appDetail.artworkUrl512}}/>
-          <View style={{justifyContent: 'space-between'}}>
-            <View>
-              <Text>{appDetail.trackCensoredName}</Text>
-              <Text>{appDetail.sellerName}</Text>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={{
-                  width: 50, backgroundColor: '#66f', padding: 4,
-                  borderRadius: 25, 
-                  justifyContent: 'center', alignItems: 'center'
-                }}
-                onPress={this.onGet} >
-                <Text style={{color: '#fff', fontWeight: 'bold'}} >GET</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+      <ScrollView >
+        <GeneralView appDetail={appDetail} />
+        <View style={styles.row}>
+          <Text style={styles.titleFont}>Description</Text>
+          <Text style={styles.contentFont} numberOfLines={readMore? null : 4}>{description}</Text>
+          <TouchableOpacity 
+            style={{width: 30}}
+            onPress={() => this.setState({readMore: !readMore})} >
+            <Text style={styles.moreFont}>{readMore? 'less' : 'more'}</Text>
+          </TouchableOpacity>
         </View>
+        <Preview appDetail={appDetail} />
       </ScrollView>
         
     );
