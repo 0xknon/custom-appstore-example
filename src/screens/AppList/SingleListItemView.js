@@ -21,6 +21,7 @@ const { width, height } = Dimensions.get('window');
 
 export class SingleListItemView extends Component {
 
+	unmounted = false
 
 	state = {
 		averageUserRating: null
@@ -31,11 +32,17 @@ export class SingleListItemView extends Component {
 		let appId = props.info.id.attributes['im:id'];
 		getAppDetailById(appId)
 			.then(result => {
-				this.setState({
-					averageUserRating: result.results[0].averageUserRating
-				})
+				if (!this.unmounted) {
+					this.setState({
+						averageUserRating: result.results[0].averageUserRating
+					})
+				}
 			})
 			.catch(err => console.log(err))
+	}
+
+	componentWillUnmount () {
+		this.unmounted = true
 	}
 
 	navigateToAppDetail(appId) {
@@ -68,15 +75,20 @@ export class SingleListItemView extends Component {
 						source={{uri: imageURL}} />
 				</View>
 				<View style={{justifyContent: 'space-between', flex: 6, marginVertical: 4}} >
-					<Text numberOfLines={2} style={{fontSize: 11}} >{appTitle}</Text>
-					<Text style={{fontSize: 11, marginTop: 4, color: '#777'}} >{appCategory}</Text>
+					<View>
+						<Text numberOfLines={2} style={{fontSize: 11}} >{appTitle}</Text>
+						<Text style={{fontSize: 11, marginTop: 4, color: '#777'}} >{appCategory}</Text>
+					</View>
 					<View style={{width: 50}} >
-						<StarRating 
-							starSize={12}
-							disabled={true}
-							maxStars={5}
-							rating={isNaN(averageUserRating)? 0 : averageUserRating} 
-							fullStarColor={'yellow'}/>
+						{
+							isNaN(averageUserRating)? null : 
+							<StarRating 
+								starSize={12}
+								disabled={true}
+								maxStars={5}
+								rating={averageUserRating} 
+								fullStarColor={'yellow'}/>
+						}
 					</View>
 				</View>
 			</TouchableOpacity>

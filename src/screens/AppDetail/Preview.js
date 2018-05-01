@@ -21,8 +21,8 @@ function wp (percentage) {
 	return Math.round(value);
 }
 
-const slideWidth = wp(82);
-const itemHorizontalMargin = wp(2);
+const slideWidth = wp(80);
+const itemHorizontalMargin = wp(1);
 const itemWidth = slideWidth + itemHorizontalMargin * 2;
 
 class Preview extends Component {
@@ -36,7 +36,7 @@ class Preview extends Component {
 
 	renderItem({item, index}, parallaxProps) {
 		return (
-			<Image style={{ width: 320, height: 228*320/406, borderRadius: 5}} key={index} source={{uri: item}}/>
+			<Image style={{ width: slideWidth, height: 228*slideWidth/406, borderRadius: 5}} key={index} source={{uri: item}}/>
 		);
 	}
 

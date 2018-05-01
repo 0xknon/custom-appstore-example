@@ -20,7 +20,7 @@ import { getAppDetailById } from '../../lib/api'
 const { width, height } = Dimensions.get('window');
 import styles from './styles'
 
-export class Login extends Component {
+export class AppDetail extends Component {
 
 
   state = {
@@ -71,4 +71,4 @@ export class Login extends Component {
 }
 
 
-export default connect()(Login);
+export default connect()(AppDetail);

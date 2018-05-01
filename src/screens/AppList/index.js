@@ -113,7 +113,7 @@ export class AppList extends Component {
 
   render() {
 		let { normalListLength, recommendationListLoading, normalListLoading } = this.state;
-		let { normalList, searchedList } = this.props;
+		let { normalList, searchedList, isSearching, navigator } = this.props;
 		const paginatedList = normalList.slice(0, normalListLength);
 		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 		let dataSource = ds.cloneWithRows(paginatedList)
@@ -124,9 +124,9 @@ export class AppList extends Component {
 			)
 		}
 
-		if (searchedList.length != 0) {
+		if (isSearching) {
 			return (
-				<SearchedListView />
+				<SearchedListView navigator={navigator}/>
 			)
 		}
     return (
@@ -151,11 +151,12 @@ export class AppList extends Component {
 
 
 const mapStateToProps = (state) => {
-	const { normalList, recommendationList, searchedList} = state.appList.toJS();
+	const { normalList, recommendationList, searchedList, isSearching} = state.appList.toJS();
 	return {
 		normalList,
 		recommendationList,
-		searchedList
+		searchedList,
+		isSearching
 	}
 } 
 

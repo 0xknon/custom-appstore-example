@@ -5,7 +5,8 @@ import actions from './actions';
 const initState = new Map({
 	normalList: [],
 	recommendationList: [],
-	searchedList: []
+	searchedList: [],
+	isSearching: ''
 });
 
 const appList = (state = initState, action) => {
@@ -17,6 +18,8 @@ const appList = (state = initState, action) => {
 			return state.set('recommendationList', action.recommendationList);
 		case actions.UPDATE_SEARCHED_APP_LIST:
 			return state.set('searchedList', action.searchedList);
+		case actions.SET_IS_SEARCHING:
+			return state.set('isSearching', action.isSearching);
 		default:
 			return state
 	}

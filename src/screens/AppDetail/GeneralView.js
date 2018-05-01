@@ -53,13 +53,13 @@ class GeneralView extends Component {
 
 				<View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 16}}>
 					<View>
-						<View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}} >
+						<View style={{flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}} >
 							{
 								isNaN(averageUserRating)? null :
 								<Text style={{color: 'grey', fontSize: 17}} >{Number(averageUserRating).toFixed(1)} </Text>
 							}
 							<StarRating 
-								starSize={17}
+								starSize={20}
 								disabled={true}
 								maxStars={5}
 								rating={isNaN(averageUserRating)? 0 : averageUserRating} 
