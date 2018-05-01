@@ -1,7 +1,5 @@
 import { Navigation } from 'react-native-navigation';
-import Login from './login';
-import HomeTab from './homeTab';
-import SearchTab from './searchTab';
+
 import AppDetail from './AppDetail';
 import AppList from './AppList';
 import SearchBar from './AppList/SearchBar';

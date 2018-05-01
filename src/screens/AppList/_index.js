@@ -7,17 +7,14 @@ import {
 	View,
 	Dimensions,
 	ScrollView,
-	FlatList,
 	ListView
 } from 'react-native';
 import {Navigation} from 'react-native-navigation';
 import {connect} from 'react-redux';
-import * as Rx from "rxjs";
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/map';
 import {
     LazyloadScrollView,
-		LazyloadView,
+    LazyloadView,
+		LazyloadImage,
 		LazyloadListView
 } from 'react-native-lazyload';
 import * as  appActions from '../../redux/actions';
@@ -26,7 +23,6 @@ import SingleRecommendedView from './SingleRecommendedView'
 import SingleListItemView from './SingleListItemView'
 
 import { getRecommendationList, getNormalList } from '../../lib/api'
-const { width, height } = Dimensions.get('window')
 
 export class AppList extends Component {
 	static navigatorStyle = {
@@ -36,17 +32,11 @@ export class AppList extends Component {
 	state = {
 		recommendedList: [],
 		normalList: [],
-		normalListLength: 0,
-		debounced: ''
+		normalListLength: 10
 	}
 
 	constructor(props) {
 		super(props);
-    this.onEndReached$ = new Rx.Subject();
-    this.onEndReached = this.onEndReached.bind(this);
-	}
-
-	componentDidMount() {
 		//Recommended List fetch
 		getRecommendationList()
 			.then(recommendedApp => {
@@ -62,27 +52,6 @@ export class AppList extends Component {
 					normalList: normalListApp.feed.entry
 				})
 			})
-
-		this.subscription = this.onEndReached$
-			.debounceTime(1100)
-			.subscribe(distanceFromEnd => {
-				let { normalListLength } = this.state;
-				this.setState({normalListLength: normalListLength + 10})
-			});
-	}
-
-  componentWillUnmount() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-	}
-	
-	onEndReached(distanceFromEnd) {
-		//console.log(distanceFromEnd); 
-		// let { normalListLength } = this.state;
-		// //this.setState({normalListLength: normalListLength + 10})
-		// console.log(this.state.normalList); 
-    this.onEndReached$.next(distanceFromEnd);
 	}
 
 	renderHeader() {
@@ -94,10 +63,10 @@ export class AppList extends Component {
 					showsHorizontalScrollIndicator={false}
 					name="lazyload-list" >
 					{
-						this.state.recommendedList.map((info, index) => (
+						this.state.recommendedList.map((info) => (
 							<SingleRecommendedView 
 								navigator={this.props.navigator}
-								key={index} info={info}/>
+								key={info.id.attributes['im:id']} info={info}/>
 						))
 					}
 				</LazyloadScrollView>
@@ -106,33 +75,36 @@ export class AppList extends Component {
 	}
 	renderItem(item, sectionID, rowID, highlightRow) {
 		return ( 
-			<SingleListItemView 
-				key={Number(rowID)}
-				navigator={this.props.navigator}rank={Number(rowID) + 1} info={item}/>
+			<LazyloadView>
+				<SingleListItemView 
+					navigator={this.props.navigator}
+					key={rowID} rank={Number(rowID) + 1} info={item}/>
+			</LazyloadView>
 		)
 	}
 
   render() {
 		let { normalList, recommendedList, normalListLength } = this.state;
-		const paginatedList = normalList.slice(0, normalListLength);
+		let keyIndex = 0;
 		const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-		//let dataSource = ds.cloneWithRows(paginatedList)
-		let dataSource = ds.cloneWithRows(normalList)
+		const data = ds.cloneWithRows([
+			...normalList
+		])
     return (
 			<LazyloadListView
-				name="lazyload-listview"
-				dataSource={dataSource}
+				name="lazyload-list" 
 				stickyHeaderIndices={[]}
-				initialListSize={10}
+				initialListSize={0}
+				dataSource={data}
 				pageSize={10}
-				enableEmptySections={true}
-				scrollRenderAheadDistance={10}
+				onEndReachedThreshold={-10}
 				renderScrollComponent={() => <ScrollView />}
+				scrollRenderAheadDistance={10}
 				renderHeader={() => this.renderHeader()}
 				renderRow={(item, sectionID, rowID, highlightRow) => this.renderItem(item, sectionID, rowID, highlightRow)}
-				onEndReachedThreshold={0}
-				// onEndReached={this.onEndReached}
-			/>
+				>
+			</LazyloadListView>
+        
     );
   }
 

@@ -18,14 +18,26 @@ import { SearchBar } from 'react-native-elements'
 const { width, height } = Dimensions.get('window');
 
 export class SingleRecommendedView extends Component {
+
+
+	navigateToAppDetail(appId) {
+		this.props.navigator.push({
+			screen: 'AppDetail', 
+			passProps: {
+				appId
+			},
+		})
+	}
   render() {
 		let { info } = this.props;
 		let imageURL = info['im:image'][info['im:image'].length-1].label;
 		let appTitle = info['im:name'].label;
 		let appCategory = info.category.attributes.label;
-		console.log(imageURL);
+		let appId = info.id.attributes['im:id'];
     return (
-			<TouchableOpacity style={{width: 80, height: height/5, marginRight: 16}}>
+			<TouchableOpacity 
+				style={{width: 80, height: height/5, marginRight: 16}}
+				onPress={() => this.navigateToAppDetail(appId)}>
 				<LazyloadImage
 					host="lazyload-list"
 					style={styles.roundImage}
